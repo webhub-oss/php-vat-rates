@@ -22,7 +22,7 @@ class Rates
 
     public static function all() : array
     {
-        return array_map(function($rate){
+        return array_map(function ($rate) {
             return new Rate($rate);
         }, self::data());
     }

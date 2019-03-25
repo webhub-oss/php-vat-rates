@@ -23,6 +23,14 @@ $rate = Rates::territory('BE')->at('1990-01-01');
 $rate->rate(); // 0.12
 ```
 
+A `Rate` implements `ArrayAccess`, so when using with for example Laravel's Collection, this is perfectly possible:
+
+```php
+collect(Rates::territory('NL')->all())
+  ->sortBy('start_date')
+  ->pluck('rate', 'start_date');
+```
+
 Generating
 ---
 
