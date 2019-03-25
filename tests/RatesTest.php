@@ -3,26 +3,23 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Webhub\Vat\AmbiguousResultException;
 use Webhub\Vat\NoResultException;
 use Webhub\Vat\Rate;
 use Webhub\Vat\Rates;
-use Webhub\Vat\Territory;
 
 class RatesTest extends TestCase
 {
     public function testCurrent()
     {
-        $rate = Rates::current('NL');
+        $rates = (new Rates)->current();
 
-        $this->assertInstanceOf(Rate::class, $rate);
-
-        $this->assertEquals("0.21", $rate->rate());
-        $this->assertEquals('standard', $rate->type());
+        $this->assertInstanceOf(Rates::class, $rates);
     }
 
-    public function testRates()
+    public function testAll()
     {
-        $rates = Rates::all();
+        $rates = (new Rates)->all();
 
         $this->assertIsArray($rates);
 
@@ -31,7 +28,7 @@ class RatesTest extends TestCase
 
     public function testCurrentFromMultiple()
     {
-        $rate = Rates::territory('FR')->at('2019-01-01');
+        $rate = (new Rates)->in('FR')->at('2019-01-01')->get();
 
         $this->assertInstanceOf(Rate::class, $rate);
 
@@ -40,22 +37,19 @@ class RatesTest extends TestCase
 
     public function testTerritories()
     {
-        $territories = Rates::territories(true);
+        $territories = (new Rates)->territories(true);
 
         $this->assertContains('FR', $territories);
         $this->assertContains('DE-78266', $territories);
         $this->assertNotContains('GR-64004', $territories);
 
-        $territories = Rates::territories(false);
+        $territories = (new Rates)->territories(false);
         $this->assertContains('GR-64004', $territories);
-        ;
     }
 
     public function testTerritory()
     {
-        $territory = Rates::territory('NL');
-
-        $this->assertInstanceOf(Territory::class, $territory);
+        $territory = (new Rates)->in('NL');
 
         $this->assertGreaterThanOrEqual(10, $territory->all());
     }
@@ -64,6 +58,13 @@ class RatesTest extends TestCase
     {
         $this->expectException(NoResultException::class);
 
-        Rates::current('XXX');
+        (new Rates)->in('XXX')->get();
+    }
+
+    public function testAmbiguousResult()
+    {
+        $this->expectException(AmbiguousResultException::class);
+
+        (new Rates)->in('NL')->get();
     }
 }

@@ -10,7 +10,7 @@ class RateTest extends TestCase
 {
     public function testGetters()
     {
-        $rate = Rates::territory('NL')->at('2000-01-01');
+        $rate = (new Rates)->in('NL')->at('2000-01-01')->get();
 
         $this->assertEquals('0.175', $rate->rate());
         $this->assertEquals('standard', $rate->type());
@@ -22,7 +22,7 @@ class RateTest extends TestCase
 
     public function testArrayAccess()
     {
-        $rate = Rates::territory('DE')->at('1990-01-01');
+        $rate = (new Rates)->in('DE')->at('1990-01-01')->get();
 
         $this->assertEquals('0.14', $rate['rate']);
     }

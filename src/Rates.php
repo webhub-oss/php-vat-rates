@@ -6,36 +6,92 @@ use Carbon\Carbon;
 
 class Rates
 {
-    protected static $data;
+    /**
+     * @var array of vat rates data
+     */
+    protected $data;
 
-    public static function current(string $territory_code) : Rate
+    public function __construct(array $rules = null)
     {
-        return self::territory($territory_code)->current();
+        $this->data = $rules ?? require __DIR__.'/data.php';
     }
 
-    public static function territory(string $code) : Territory
+    /**
+     * @return Rate
+     * @throws AmbiguousResultException
+     * @throws NoResultException
+     */
+    public function get() : Rate
     {
-        $code = strtoupper(trim($code));
+        $count = count($this->data);
 
-        return new Territory(array_filter(self::data(), function ($rate) use ($code) {
-            return in_array($code, explode("\n", $rate['territory_codes']));
-        }));
+        if($count === 0){
+            throw new NoResultException;
+        }
+
+        if($count > 1){
+            throw new AmbiguousResultException;
+        }
+
+        return new Rate(current($this->data));
     }
 
-    public static function all() : array
+    /**
+     * Return rates that hold now
+     *
+     * @return Rates
+     */
+    public function current() : Rates
+    {
+        return $this->at(Carbon::now());
+    }
+
+    /**
+     * Return rates that hold at the specified time
+     * @param $when
+     * @return Rates
+     */
+    public function at($when) : Rates
+    {
+        $when = ($when instanceof Carbon) ? $when : Carbon::make($when);
+
+        return $this->whereValidAt($when);
+    }
+
+    /**
+     * Return rates that hold in a specific territory
+     *
+     * @param string $territory
+     * @return Rates
+     */
+    public function in(string $territory) : Rates
+    {
+        $territory = strtoupper(trim($territory));
+
+        return $this->whereTerritory($territory);
+    }
+
+    public function type(string $type) : Rates
+    {
+        $type = strtolower(trim($type));
+
+        return $this->whereType($type);
+    }
+
+    public function all() : array
     {
         return array_map(function ($rate) {
             return new Rate($rate);
-        }, self::data());
+        }, $this->data);
     }
 
-    public static function territories(bool $current = true) : array
+    public function territories(bool $current = true) : array
     {
         $now = Carbon::now();
 
         $territories = [];
 
-        foreach (self::data() as $rate) {
+        foreach ($this->data as $rate) {
             if ($current) {
                 if ($rate['start_date'] && $now->isBefore($rate['start_date'])) {
                     continue;
@@ -56,12 +112,39 @@ class Rates
         return $territories;
     }
 
-    protected static function data() : array
+    protected function whereValidAt(Carbon $at) : Rates
     {
-        if (!self::$data) {
-            self::$data = require 'data.php';
-        }
+        return $this->filter(function (array $data) use ($at){
 
-        return self::$data;
+            if($data['start_date'] && $at->isBefore($data['start_date'])){
+                return false;
+            }
+
+            if($data['stop_date'] && $at->isAfter($data['stop_date'])){
+                return false;
+            }
+
+            return true;
+
+        });
+    }
+
+    protected function whereTerritory(string $where) : Rates
+    {
+        return $this->filter(function(array $data) use ($where){
+            return in_array($where, explode("\n", $data['territory_codes']));
+        });
+    }
+
+    protected function whereType(string $type) : Rates
+    {
+        return $this->filter(function (array $data) use ($type){
+            return $data['rate_type'] === $type;
+        });
+    }
+
+    protected function filter($callback) : Rates
+    {
+        return new self(array_filter($this->data, $callback));
     }
 }
