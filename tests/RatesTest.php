@@ -37,13 +37,13 @@ class RatesTest extends TestCase
 
     public function testTerritories()
     {
-        $territories = (new Rates)->territories(true);
+        $territories = (new Rates)->current()->territories();
 
         $this->assertContains('FR', $territories);
         $this->assertContains('DE-78266', $territories);
         $this->assertNotContains('GR-64004', $territories);
 
-        $territories = (new Rates)->territories(false);
+        $territories = (new Rates)->territories();
         $this->assertContains('GR-64004', $territories);
     }
 
