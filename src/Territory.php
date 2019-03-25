@@ -86,7 +86,7 @@ class Territory
             return false;
         }
 
-        if ($rate['stop_date'] && $at > $rate['stop_date']) {
+        if ($rate['stop_date'] && $at >= $rate['stop_date']) {
             return false;
         }
 
