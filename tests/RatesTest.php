@@ -39,7 +39,7 @@ class RatesTest extends TestCase
     {
         $rates = (new Rates)->type('standard');
 
-        $this->assertTrue(array_reduce($rates->all(), function(bool $valid, Rate $rate){
+        $this->assertTrue(array_reduce($rates->all(), function (bool $valid, Rate $rate) {
             return $valid && $rate->rateType() === 'standard';
         }, true));
     }
