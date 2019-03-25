@@ -25,5 +25,14 @@ class RateTest extends TestCase
         $rate = (new Rates)->in('DE')->at('1990-01-01')->get();
 
         $this->assertEquals('0.14', $rate['rate']);
+
+        $this->assertTrue(isset($rate['rate']));
+        $this->assertFalse(isset($rate['foo']));
+
+        $rate['rate'] = 0.123;
+        $this->assertEquals(0.123, $rate['rate']);
+
+        unset($rate['rate']);
+        $this->assertFalse(isset($rate['rate']));
     }
 }

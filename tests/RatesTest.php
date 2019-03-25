@@ -35,6 +35,15 @@ class RatesTest extends TestCase
         $this->assertEquals(0.2, $rate->rate());
     }
 
+    public function testType()
+    {
+        $rates = (new Rates)->type('standard');
+
+        $this->assertTrue(array_reduce($rates->all(), function(bool $valid, Rate $rate){
+            return $valid && $rate->rateType() === 'standard';
+        }, true));
+    }
+
     public function testTerritories()
     {
         $territories = (new Rates)->current()->territories();
