@@ -8,7 +8,10 @@ A PHP wrapper of [kdeldycke/vat-rates](https://github.com/kdeldycke/vat-rates).
 Usage
 ---
 
+    composer require webhub/vat
+
 ```php
+<?php 
 use Webhub\Vat\Rates;
 
 $rate = Rates::current('NL');
