@@ -85,23 +85,11 @@ class Rates
         }, $this->data);
     }
 
-    public function territories(bool $current = true) : array
+    public function territories() : array
     {
-        $now = Carbon::now();
-
         $territories = [];
 
         foreach ($this->data as $rate) {
-            if ($current) {
-                if ($rate['start_date'] && $now->isBefore($rate['start_date'])) {
-                    continue;
-                }
-
-                if ($rate['stop_date'] && $now->isAfter($rate['stop_date'])) {
-                    continue;
-                }
-            }
-
             $territories = array_merge($territories, explode("\n", $rate['territory_codes']));
         }
 
