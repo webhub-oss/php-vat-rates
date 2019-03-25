@@ -29,6 +29,28 @@ class RatesTest extends TestCase
         $this->assertInstanceOf(Rate::class, current($rates));
     }
 
+    public function testCurrentFromMultiple()
+    {
+        $rate = Rates::territory('FR')->at('2019-01-01');
+
+        $this->assertInstanceOf(Rate::class, $rate);
+
+        $this->assertEquals(0.2, $rate->rate());
+    }
+
+    public function testTerritories()
+    {
+        $territories = Rates::territories(true);
+
+        $this->assertContains('FR', $territories);
+        $this->assertContains('DE-78266', $territories);
+        $this->assertNotContains('GR-64004', $territories);
+
+        $territories = Rates::territories(false);
+        $this->assertContains('GR-64004', $territories);
+        ;
+    }
+
     public function testTerritory()
     {
         $territory = Rates::territory('NL');
