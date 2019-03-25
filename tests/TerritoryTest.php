@@ -15,9 +15,9 @@ class TerritoryTest extends TestCase
 
         $this->assertInstanceOf(Territory::class, $territory);
 
-        $this->assertCount(7, $territory->rates());
+        $this->assertCount(7, $territory->all());
 
-        $this->assertInstanceOf(Rate::class, current($territory->rates()));
+        $this->assertInstanceOf(Rate::class, current($territory->all()));
     }
 
     /**

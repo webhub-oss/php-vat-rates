@@ -51,7 +51,7 @@ class Territory
     /**
      * @return array of `Rate`
      */
-    public function rates() : array
+    public function all() : array
     {
         return array_map(function ($rate) {
             return new Rate($rate);

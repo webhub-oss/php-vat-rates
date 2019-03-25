@@ -20,13 +20,22 @@ class RatesTest extends TestCase
         $this->assertEquals('standard', $rate->type());
     }
 
+    public function testRates()
+    {
+        $rates = Rates::all();
+
+        $this->assertIsArray($rates);
+
+        $this->assertInstanceOf(Rate::class, current($rates));
+    }
+
     public function testTerritory()
     {
         $territory = Rates::territory('NL');
 
         $this->assertInstanceOf(Territory::class, $territory);
 
-        $this->assertCount(10, $territory->rates());
+        $this->assertGreaterThanOrEqual(10, $territory->all());
     }
 
     public function testNoResults()
