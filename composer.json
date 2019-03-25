@@ -1,0 +1,38 @@
+{
+    "name": "webhub/vat",
+    "description": "kdeldycke's VAT rates wrapped in a PHP library",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Lankhorst",
+            "email": "tomlankhorst@webhub.nl"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "nesbot/carbon": "^2.16"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^6.3",
+        "league/csv": "^9.2",
+        "zendframework/zend-code": "^3.3",
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webhub\\Vat\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Webhub\\Vat\\Build\\": "build/",
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "build": [
+            "Webhub\\Vat\\Build\\Generator::generate"
+        ]
+    }
+}
