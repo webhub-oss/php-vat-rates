@@ -13,7 +13,7 @@ class RateTest extends TestCase
         $rate = (new Rates)->in('NL')->at('2000-01-01')->get();
 
         $this->assertEquals('0.175', $rate->rate());
-        $this->assertEquals('standard', $rate->type());
+        $this->assertEquals('standard', $rate->rateType());
         $this->assertEquals('', $rate->description());
         $this->assertEquals('EUR', $rate->currencyCode());
         $this->assertEquals(Carbon::make('1992-10-01'), $rate->start());

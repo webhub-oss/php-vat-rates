@@ -25,11 +25,11 @@ class Rates
     {
         $count = count($this->data);
 
-        if($count === 0){
+        if ($count === 0) {
             throw new NoResultException;
         }
 
-        if($count > 1){
+        if ($count > 1) {
             throw new AmbiguousResultException;
         }
 
@@ -48,6 +48,7 @@ class Rates
 
     /**
      * Return rates that hold at the specified time
+     *
      * @param $when
      * @return Rates
      */
@@ -71,6 +72,12 @@ class Rates
         return $this->whereTerritory($territory);
     }
 
+    /**
+     * Return rates that have a specific type
+     *
+     * @param string $type
+     * @return Rates
+     */
     public function type(string $type) : Rates
     {
         $type = strtolower(trim($type));
@@ -78,6 +85,11 @@ class Rates
         return $this->whereType($type);
     }
 
+    /**
+     * Return all matching rates
+     *
+     * @return array
+     */
     public function all() : array
     {
         return array_map(function ($rate) {
@@ -85,6 +97,11 @@ class Rates
         }, $this->data);
     }
 
+    /**
+     * Return all territories in the current match
+     *
+     * @return array
+     */
     public function territories() : array
     {
         $territories = [];
@@ -100,37 +117,59 @@ class Rates
         return $territories;
     }
 
+    /**
+     * Create a new set with rules that are valid at `$at`
+     *
+     * @param Carbon $at
+     * @return Rates
+     */
     protected function whereValidAt(Carbon $at) : Rates
     {
-        return $this->filter(function (array $data) use ($at){
-
-            if($data['start_date'] && $at->isBefore($data['start_date'])){
+        return $this->filter(function (array $data) use ($at) {
+            if ($data['start_date'] && $at->isBefore($data['start_date'])) {
                 return false;
             }
 
-            if($data['stop_date'] && $at->isAfter($data['stop_date'])){
+            if ($data['stop_date'] && $at->isAfter($data['stop_date'])) {
                 return false;
             }
 
             return true;
-
         });
     }
 
+    /**
+     * Create a new set with rules that apply to territory `$where`
+     *
+     * @param string $where
+     * @return Rates
+     */
     protected function whereTerritory(string $where) : Rates
     {
-        return $this->filter(function(array $data) use ($where){
+        return $this->filter(function (array $data) use ($where) {
             return in_array($where, explode("\n", $data['territory_codes']));
         });
     }
 
+    /**
+     * Create a new set with rules that are of type `$type`
+     *
+     * @param string $type
+     * @return Rates
+     */
     protected function whereType(string $type) : Rates
     {
-        return $this->filter(function (array $data) use ($type){
+        return $this->filter(function (array $data) use ($type) {
             return $data['rate_type'] === $type;
         });
     }
 
+    /**
+     * Apply a callback to `$data` and return a new set
+     *
+     * @param $callback
+     * @return Rates
+     */
     protected function filter($callback) : Rates
     {
         return new self(array_filter($this->data, $callback));

@@ -18,7 +18,7 @@ class Rate implements \ArrayAccess
         return $this->data['rate'];
     }
 
-    public function type() : string
+    public function rateType() : string
     {
         return $this->data['rate_type'];
     }
