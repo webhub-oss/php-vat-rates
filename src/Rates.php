@@ -49,6 +49,10 @@ class Rates
             $territories = array_merge($territories, explode("\n", $rate['territory_codes']));
         }
 
+        $territories = array_unique($territories);
+
+        sort($territories);
+
         return $territories;
     }
 
