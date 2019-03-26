@@ -35,6 +35,11 @@ class RatesTest extends TestCase
         $this->assertEquals(0.2, $rate->rate());
     }
 
+    public function testProxy()
+    {
+        $this->assertEquals(0.2, (new Rates)->in('FR')->current()->rate());
+    }
+
     public function testType()
     {
         $rates = (new Rates)->type('standard');

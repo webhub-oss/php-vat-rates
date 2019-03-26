@@ -118,6 +118,20 @@ class Rates
     }
 
     /**
+     * Proxies all other calls to a single Rate, if it exists
+     *
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     * @throws AmbiguousResultException
+     * @throws NoResultException
+     */
+    public function __call($name, $arguments)
+    {
+        return $this->get()->{$name}(...$arguments);
+    }
+
+    /**
      * Create a new set with rules that are valid at `$at`
      *
      * @param Carbon $at
