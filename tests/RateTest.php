@@ -16,8 +16,8 @@ class RateTest extends TestCase
         $this->assertEquals('standard', $rate->rateType());
         $this->assertEquals('', $rate->description());
         $this->assertEquals('EUR', $rate->currencyCode());
-        $this->assertEquals(Carbon::make('1992-10-01'), $rate->start());
-        $this->assertEquals(Carbon::make('2001-01-01'), $rate->stop());
+        $this->assertEquals(Carbon::make('1992-10-01'), $rate->startDate());
+        $this->assertEquals(Carbon::make('2001-01-01'), $rate->stopDate());
     }
 
     public function testArrayAccess()

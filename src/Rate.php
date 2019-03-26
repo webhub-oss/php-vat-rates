@@ -33,12 +33,12 @@ class Rate implements \ArrayAccess
         return $this->data['currency_code'];
     }
 
-    public function start() : Carbon
+    public function startDate() : Carbon
     {
         return Carbon::make($this->data['start_date']);
     }
 
-    public function stop() : Carbon
+    public function stopDate() : Carbon
     {
         return Carbon::make($this->data['stop_date']);
     }

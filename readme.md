@@ -9,7 +9,7 @@ European VAT information easily available
  
 This is a wrapper of [kdeldycke/vat-rates](https://github.com/kdeldycke/vat-rates).
 
-Usage
+🛠 Usage
 ---
 
 ### Installation
@@ -29,6 +29,23 @@ $rate->currencyCode(); // 'EUR'
 $rate = (new Rates)->in('BE')->at('1990-01-01')->get();
 $rate->rate(); // 0.12
 ```
+
+Rates can be filtered: 
+
+- `->in(string $territory)` a territory like `DE` or `NL`
+- `->at(string|Carbon $when)` a date like `2018-01-05`, supports Carbon 
+- `->current()` alias for `->at(Carbon::now())`
+- `->type(string $type)` rate type, currently the database only contains _standard_ rates.
+
+When one rate remains, the `get()` method retrieves it.
+
+A rate has:
+
+- `->rate() : string` decimal fraction representation of the rate, e.g. '0.20' for 20%
+- `->rateType() : string` type of the rate, currently `standard`.
+- `->(start|stop)Date() : Carbon` Carbon date instance of first valid day and subsequent first not-valid day.
+- `->currencyCode() : string` currency like `SEK` or `EUR`
+- `->description() : ?string` optional description of the rate
 
 ### Magic methods
 
@@ -54,7 +71,7 @@ collect((new Rates)->in('NL')->all())
   ->pluck('rate', 'start_date');
 ```
 
-Compiling a new dataset
+📝 Compiling a new dataset
 ---
 
 Data is obtained from `kdeldycke/vat-rates` and written to a PHP file `data.php` that is included in `Rates`.
