@@ -1,5 +1,4 @@
-European VAT information easily available
-=====
+# European VAT information easily available
 
 [![Build Status](https://travis-ci.org/webhub-oss/php-vat-rates.svg?branch=master)](https://travis-ci.org/webhub-oss/php-vat-rates)
 [![codecov](https://codecov.io/gh/webhub-oss/php-vat-rates/branch/master/graph/badge.svg)](https://codecov.io/gh/webhub-oss/php-vat-rates)
@@ -9,8 +8,7 @@ European VAT information easily available
  
 This is a wrapper of [kdeldycke/vat-rates](https://github.com/kdeldycke/vat-rates).
 
-🛠 Usage
----
+## 🛠 Usage
 
 ### Installation
 
@@ -30,6 +28,10 @@ $rate = (new Rates)->in('BE')->at('1990-01-01')->get();
 $rate->rate(); // 0.12
 ```
 
+### Rates
+
+A `Rates` instance is a collection of rates. 
+
 Rates can be filtered: 
 
 - `->in(string $territory)` a territory like `DE` or `NL`
@@ -37,9 +39,12 @@ Rates can be filtered:
 - `->current()` alias for `->at(Carbon::now())`
 - `->type(string $type)` rate type, currently the database only contains _standard_ rates.
 
-When one rate remains, the `get()` method retrieves it.
+When one rate remains, the `->get() : Rate` method retrieves it, otherwise it throws. 
+Obtain all rates through `->all() : array`. 
 
-A rate has:
+### Rate
+
+A `Rate` has:
 
 - `->rate() : string` decimal fraction representation of the rate, e.g. '0.20' for 20%
 - `->rateType() : string` type of the rate, currently `standard`.
@@ -47,21 +52,20 @@ A rate has:
 - `->currencyCode() : string` currency like `SEK` or `EUR`
 - `->description() : ?string` optional description of the rate
 
-### Magic methods
-
 `Rates` proxies method calls to the underlying `Rate` if it exists and is unique. 
 
 ```php
-// proxying...
-(new Rates)->in('DE')->current()->rate();
-// equals
+// with ->get()
 (new Rates)->in('DE')->current()->get()->rate();
+// equals shorter:
+(new Rates)->in('DE')->current()->rate();
 
-// non unique, throws
-(new Rates)->in('FR')->rate();
+// non unique
+(new Rates)->in('FR')->rate();  // throws AmbiguousResultException
+(new Rates)->in('XX')->get();   // throws NoResultException
 ```
 
-### As array
+#### Rate array access
 
 A `Rate` implements `ArrayAccess`, so when using with for example Laravel's Collection, this is perfectly possible:
 
@@ -71,8 +75,7 @@ collect((new Rates)->in('NL')->all())
   ->pluck('rate', 'start_date');
 ```
 
-📝 Compiling a new dataset
----
+## 📝 Compiling a new dataset
 
 Data is obtained from `kdeldycke/vat-rates` and written to a PHP file `data.php` that is included in `Rates`.
 
@@ -80,4 +83,4 @@ Data is obtained from `kdeldycke/vat-rates` and written to a PHP file `data.php`
     composer run build  // runs Generator::generate()
     
     
-### 🇪🇺
+<h1 align="center">🇪🇺</h1>
