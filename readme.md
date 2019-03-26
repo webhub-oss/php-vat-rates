@@ -2,10 +2,11 @@ European VAT information easily available
 =====
 
 [![Build Status](https://travis-ci.org/webhub-oss/php-vat-rates.svg?branch=master)](https://travis-ci.org/webhub-oss/php-vat-rates)
+[![codecov](https://codecov.io/gh/webhub-oss/php-vat-rates/branch/master/graph/badge.svg)](https://codecov.io/gh/webhub-oss/php-vat-rates)
 [![Latest Stable Version](https://poser.pugx.org/webhub/vat/v/stable)](https://packagist.org/packages/webhub/vat)
 [![Total Downloads](https://poser.pugx.org/webhub/vat/downloads)](https://packagist.org/packages/webhub/vat)
 [![License](https://poser.pugx.org/webhub/vat/license)](https://packagist.org/packages/webhub/vat)
-
+ 
 This is a wrapper of [kdeldycke/vat-rates](https://github.com/kdeldycke/vat-rates).
 
 Usage
@@ -62,4 +63,4 @@ Data is obtained from `kdeldycke/vat-rates` and written to a PHP file `data.php`
     composer run build  // runs Generator::generate()
     
     
-###🇪🇺
+### 🇪🇺
